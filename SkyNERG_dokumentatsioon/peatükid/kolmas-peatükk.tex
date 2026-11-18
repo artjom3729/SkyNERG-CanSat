@@ -1,0 +1,146 @@
+\section{Mehaaniline konstruktsioon}
+
+Kasutasime \url{https://www.tinkercad.com/} veebilehte kui tasuta CADi, et luua korpuse 3D mudelit. 
+Siin on toodud loomise etapid:
+\begin{enumerate}
+    \item panime toru tööalale, toru raadius 33 mm, toru seina paksus 5 mm, kõrgus 105 mm (pildid \ref{fig:1} ja \ref{fig:2})
+    \item laadisime kooli logo projekti, lõime selle peale kaarekujulise logo, lõikasime logo torust kahest küljest (pildid \ref{fig:3}, \ref{fig:4} ja \ref{fig:5})
+    \item panime tühja silindri töölauale horisontaalselt, raadius 2 mm, kopeerisime seda 8 korda 25$^\text{o}$ nurga all, kopeerisime ja tõstsime 15 mm üleval ning pöörasime 11,25 $^\text{o}$ nurga all 6 korda, siis asetsesime toru keskele ja lõikasime augud (pildid \ref{fig:6}, \ref{fig:7}, \ref{fig:8}, \ref{fig:9} ja \ref{fig:10})
+    \item lõikasime nikerduse torus ning tegime sarnast, kuid pisut väiksemat, kruvi, millele panime korpuse ülaosa (pildid \ref{fig:11} ja \ref{fig:12})
+    \item lõime resti alamosaks, selleks panime 2 mm küljega pikad ruudupulgad horisontaalselt, kopeerisime ning panime koos 3 mm küljega tühja ruutu jättes (pildid \ref{fig:13} ja \ref{fig:14})
+\end{enumerate}
+
+\section{Elektriline konstruktsioon}
+
+Kasutasime CanSat NeXTi komplekti, mida meie juhendaja sai augustis.
+CanSat NeXTi komplekt koosneb järgmistest osadest:
+\begin{enumerate}
+    \item karp põhikomponentide jaoks 
+    \item baasjaama mikroarvuti 
+    \item purksatelliidi mikroarvuti 
+    \item esimene antenn 
+    \item teine antenn 
+    \item termistor (resistor, mille takistus sõltub tugevalt temperatuurist) 
+    \item soojuskaitsetorud
+    \item varuantenn 
+    \item karp lisakomponentide jaoks
+\end{enumerate}
+
+Purksatelliit CanSat NeXT ja baasjaam töötavad tänu mikrokontrollerile. Mikrokontroller on väike arvuti ühel kiibil. CanSat kasutab ESP32, odavat, energiasäästlikku, integreeritud WiFi ja Bluetoothiga mikrokontrollerit nii baasjaamal kui ka satelliidil.
+
+Lisaks CanSati peakomplektile on projekti jaoks ostetud ka süsihappegaasi- ja niiskusemõõtja SCD41. 
+Komplekt sisaldab: 
+\begin{enumerate}
+    \item lisamoodul 
+    \item \say{jalad}
+    \item juhtmed
+\end{enumerate}
+
+See on lisamoodul, mis vajab viimistlust. Selleks peab jootma \say{jalad} lisamoodulile, et saaks seda ühendada ja purksatelliidi mikroarvuti juhtmetega koos.
+
+\section{Tarkvaraprojekt}
+
+Projekti jaoks on otsustatud kasutada Arduino IDE 2.0, et programmeerida nii CanSati kui ka baasjaama.
+
+Ettevalmistus purksatelliidi ja baasjaama programmeerimiseks on järgmised:
+
+\begin{enumerate}
+    \item läksime veebilehele \url{https://www.arduino.cc/en/software} ning laadisime alla Windows x64 paigaldaja
+    \item paigaldasime Arduino IDE 2.0
+    \item paigaldasime ESP32 draiverid veebilehelt \url{https: //www.silabs.com/developer-tools/usb-to-uart-bridge-vcp-drivers?tab=downloads }
+    \item paigaldasime ESP32 Dev Module trükkplaadi toetuse Arduino IDEs
+    \item paigaldasime CanSat NeXTi teegi Arduino IDEs
+    \item paigaldasime SparkFuni SCD41 teegi Arduino IDEs
+\end{enumerate}
+
+\section{Maandumissüsteem ehk langevari }
+
+Langevari töötab selle printsiibi järgi, et õhutakistusjõud tasakaalustab gravitatsioonijõudu. Õhutakistusjõud on võrdeline kiiruse ruuduga, mistõttu kasvab õhutakistusjõud langemiskiiruse suurenemisel. Purksatelliit hakkab langema ühtlasel kiirusel tasakaalu saavutamisel. Õhutakistusjõud on leitav järgmise valemi kaudu:
+
+\begin{equation}\label{eq:1}
+F_d = \frac{1}{2}C\rho Sv^2,
+\end{equation}
+
+kus \(C\) on keha takistustegur, \(\rho\) on gaasi või vedeliku tihedus, \(S\) on keha pindala ning \(v\) on langeva keha kiirus. 
+
+Gravitatsioonijõud on antud järgmise valemi kaudu:
+
+\begin{equation}\label{eq:2}
+F_g = mg,
+\end{equation}
+
+kus \(m\) on purksatelliidi mass langevarju massi arvestades ning \(g\) on Maa raskuskiirendus.
+
+Õhutakistus- ja gravitatsioonijõudude tasakaalustamisel on nende suurused võrdsed, seega võib asendada võrrand \ref{eq:2} võrrandisse \ref{eq:1}.
+
+\begin{equation}\label{eq:3}
+mg = \frac{1}{2}C\rho Sv^2
+\end{equation}
+
+Leiame pindala:
+
+\begin{equation}\label{eq:4}
+S = \frac{2mg}{C\rho v^2}
+\end{equation}
+
+Tavaliselt langevarju korral eeldatakse, et takistusteguri väärtus on 1,2. Purksatelliidi mass on mõõtmise järgi 300 g ehk 0,3 kg. Maa raskuskiirendus on 9,81 \si{\meter\per\second\squared}. Õhu tihedus on keskmiselt 1,28 \si{\kilo\gram\per\meter\cubed}. Lõppkiirus on 8 \si{\meter\per\second}. Asendades neid andmeid valemisse \ref{eq:4} saame
+
+\[S = \frac{2\cdot0,3\:\si{kg}\cdot9,81\:\si{\meter\per\second\squared}}{1,2\cdot1,28\:\si{\kilo\gram\per\meter\cubed}\cdot8^2\:\si{\meter\squared\per\second\squared}} \approx 0,060\:\si{\meter\squared} = 600\:\si{cm^2}\]
+
+Seega peab langevarju pindala olema umbes 600 cm$^2$. Kuigi teades, et reaalelus ei toimu asjad nii nagu teoreetilises füüsikas, otsustasime teha langevarju topeltpindalaga.
+
+Langevarja lõime koolis, pildid \ref{fig:langevari1} ja \ref{fig:langevari2} näitavad täpsemalt, kuidas me seda tegime.
+
+\section{Maapealsed tugiseadmed}
+
+Kasutatakse samuti CanSat NeXT komplektist antud vastuvõtjat ESP32 põhjal. Antenn on komplektis olemas. Ühendasime seda Artjom Jemeljanovi omanduses oleva Lenovo sülearvutiga.
+
+\section{Testimine}
+
+18.04 olid testitud meie poolt tehtud langevarjud. Testimiseks oli valitud Sinimägede vaatetorn, mille kolmanda vaateplatvormi kõrgus on 25,5 m. Kokku oli testitud 3 erinevat langevarju mudelit.
+Sinimägede vaatetorni pilt \ref{fig:sinimae} asub lisas.
+
+\begin{enumerate}
+    \item lame kuusknurkne langevari, materjal –-- pipstop kangas, pindala on 1400 cm$^2$
+    \item lame kuusknurkne langevari, materjal –-- kunstsiid, langevarju pindala on 1200 cm$^2$
+    \item poolkerakujuline langevari, materjal –-- pitstop kangas, pindala on 1500 cm$^2$
+\end{enumerate}
+
+Järgmises tabelis on esitatud nende langevarjude keskmised maandumisajad ning nende põhjal leitud maandumiskiirused:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        nr & testi number & aeg (s) & keskmine aeg (s) & keskmine kiirus (m/s) \\
+        \hline
+        \multirow{3}*{1} & 1 & 3,24 & \multirow{3}*{3,34} & \multirow{3}*{7,63}\\
+        \cline{2-3}
+         & 2 & 3,45 & &\\
+         \cline{2-3}
+         & 3 & 3,33 & &\\
+         \hline
+        \multirow{3}*{2} & 1 & 3,39 & \multirow{3}*{3,49} & \multirow{3}*{7,31}\\
+        \cline{2-3}
+         & 2 & 3,25 & & \\
+         \cline{2-3}
+         & 3 & 3,83 & & \\
+         \hline
+        \multirow{3}*{3} & 1 & 4,03 & \multirow{3}*{3,96} & \multirow{3}*{6,44}\\
+        \cline{2-3}
+         & 2 & 3,93 & & \\
+         \cline{2-3}
+         & 3 & 3,92 & & \\
+         \hline
+    \end{tabular}
+    \caption{Testide tulemused}
+    \label{tab:5}
+\end{table}
+
+Järeldused:
+Kaks esimest langevarju sobivad CanSati poolt määratud parameetritesse (langemiskiirus peab olema 8-11 m/s).
+Kuid rahulikuma maandumise tõttu meeldis meile rohkem just kolmas langevari. Purksatelliidi lendamine selle langevarjuga on aeglasem ja turvalisem, kuid pisut ületab kukutamise aega, aga ei ületa maksimaalse lubatud aega.
+
+Otsus:
+Võistluseks valisime teine ja kolmas langevari ning võistluse päeval, lähtudes ilmatingimustest ja võistluse eesmärgist, otsustame, mis mudeli paneme purksatelliidi juurde.
+

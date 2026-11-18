@@ -1,0 +1,36 @@
+\documentclass{NERG-UPT}
+\addbibresource{varia/allikad.bib}
+\usepackage{array, caption, tabularx,  ragged2e,  booktabs, multirow}
+
+\nocite{*}
+
+\def\pealkiri{Aruanne}
+\def\autor{Narva Eesti Gümnaasiumi meeskond SkyNERG\\
+Artjom Jemeljanov, Anastassia Jurtšenko, Artjom Antonov, Albert Shtele
+}
+\def\juhendaja{Natalja Kurling}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    filecolor=black,
+    urlcolor=blue,
+    pdftitle={\pealkiri},
+    pdfauthor={\autor}
+    }
+
+\begin{document}
+
+\input{varia/tiitelleht}
+
+\tableofcontents
+
+\input{peatükid/peatükkide-põhifail}
+
+\printbibliography[title={Kasutatud allikad}, nottype=personalcommunication]
+\addcontentsline{toc}{chapter}{Kasutatud allikad}
+
+\input{lisad/lisade-põhifail}
+
+\end{document}
